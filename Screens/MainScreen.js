@@ -38,7 +38,7 @@ function print_status() {
 // or in the App()
 
 db.on('error', (err) => {
-  // print_status()
+  print_status()
   console.log('error:', err)
 });
 
@@ -46,11 +46,6 @@ db.on('error', (err) => {
 
 
 
-db.on('sync', () => {
-  console.log('the db received an update!\n-------------')
-  print_status()
-  //show_items();
-});
 
 
 
@@ -140,7 +135,7 @@ export default function MainScreen({navigation}) {
   };
  
  React.useEffect(()=>{
- let stata
+ console.log("reached")
   db.on('not_ready', () => {
    
     console.log('event: the db is not yet ready it is here\n-------------')
