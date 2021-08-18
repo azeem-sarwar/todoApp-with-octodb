@@ -14,10 +14,6 @@ import {
 } from 'react-native';
 
 
-
-
-
-
 import db from '../DatabaseCOnnection/DB'
 
 var dbStatus
@@ -43,21 +39,12 @@ function print_status() {
 
 db.on('error', (err) => {
   // print_status()
-  // console.log('error:', err)
+  console.log('error:', err)
 });
 
-// db.on('not_ready', () => {
-//   dbStatus="not_ready"
-//   console.log('event: the db is not yet ready\n-------------')
-// });
 
-db.on('ready', () => {
-  // login successful, show the main screen
-  //showMainScreen();
-  dbStatus="ready"
-  console.log('event: the db is ready!\n-------------')
-  // print_status()
-});
+
+
 
 db.on('sync', () => {
   console.log('the db received an update!\n-------------')

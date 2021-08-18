@@ -12,16 +12,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 // import { Input, Button } from "react-native-elements";
 import { images } from "../constants";
 
-import {useFocus} from '../CustomHook'
+
 import { sha256 } from 'react-native-sha256';
 
 
 
 
-
-
-import SQLLite from 'react-native-octodb';
-import { useFocusEffect } from "@react-navigation/native";
 
 import db from '../DatabaseCOnnection/DB'
 
@@ -73,7 +69,13 @@ db.on('sync', () => {
 
 
 
-
+const useFocus = () => {
+  const htmlElRef = useRef(null);
+  const setFocus = () => {
+    htmlElRef.current && htmlElRef.current.focus();
+  };
+  return [htmlElRef, setFocus];
+};
 
 
 const Login = ({navigation}) => {
