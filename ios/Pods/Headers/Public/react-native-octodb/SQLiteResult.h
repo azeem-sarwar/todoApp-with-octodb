@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-octodb/platforms/ios/SQLiteResult.h
