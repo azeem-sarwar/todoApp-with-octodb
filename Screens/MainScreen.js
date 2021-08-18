@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {
   Platform,
@@ -10,20 +9,23 @@ import {
   View,
   KeyboardAvoidingView,
   SafeAreaView,
-  ActivityIndicator,
+
+  
 } from 'react-native';
 
 
-import db from '../DatabaseCOnnection/DB'
 
-var dbStatus
+import SQLLite from 'react-native-octodb';
+
+// console.log('opening the db')
+const db = SQLLite.openDatabase({name: 'file:todo.db?node=secondary&connect=tcp://198.58.100.244:1234',location:'Document'},(e)=>{console.log("Success:"+e)},(e)=>{console.log("Filure:"+e)});
+
+
 
 function print_status() {
 
   db.executeSql("pragma sync_status", [], (results) => {
     if (results.rows && results.rows.length > 0) {
-      
-      status = JSON.parse(status.sync_status)
       console.log('sync status MainScreen:', JSON.parse(status.sync_status).db_is_ready);
       //status = JSON.parse(status.sync_status);
     } else {
@@ -34,14 +36,6 @@ function print_status() {
   });
   
 }
-// maybe the code below should be inside the 'success' cb from openDatabase
-// or in the App()
-
-db.on('error', (err) => {
-  print_status()
-  console.log('error:', err)
-});
-
 
 
 
@@ -113,7 +107,7 @@ const Items = ({done: doneHeading, onPressItem}) => {
 
 export default function MainScreen({navigation}) {
   const [text, setText] = useState(null);
-  const [DBSTATUS, SETDBSTATUS] = useState("");
+
   
   const [forceUpdate, forceUpdateId] = useForceUpdate();
   const add = text => {
@@ -140,8 +134,6 @@ export default function MainScreen({navigation}) {
    
     console.log('event: the db is not yet ready it is here\n-------------')
     navigation.replace("Login")
-   
-  
   });
    
  },[])

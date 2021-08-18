@@ -20,52 +20,16 @@ import { sha256 } from 'react-native-sha256';
 
 
 
-import db from '../DatabaseCOnnection/DB'
+
+import SQLLite from 'react-native-octodb';
+
+// console.log('opening the db')
+const db = SQLLite.openDatabase({name: 'file:todo.db?node=secondary&connect=tcp://198.58.100.244:1234',location:'Document'},(e)=>{console.log("Success:"+e)},(e)=>{console.log("Filure:"+e)});
 
 
-console.log(db)
 
-function print_status() {
-  db.executeSql("pragma sync_status", [], (results) => {
-    if (results.rows && results.rows.length > 0) {
-      dbStatus = JSON.parse(status.sync_status).db_is_ready;
-      console.log('sync status login:', JSON.parse(status.sync_status).db_is_ready);
-      
-      //status = JSON.parse(status.sync_status);
-
-    } else {
-      console.log('OctoDB is not active')
-    }
-  }, (msg) => {
-    console.log('could not run "pragma sync_status":', msg)
-  });
-}
 // maybe the code below should be inside the 'success' cb from openDatabase
 // or in the App()
-
-db.on('error', (err) => {
-  print_status()
-  // console.log('error:', err)
-});
-
-db.on('not_ready', () => {
-  // show the signup/login screen
-  //showUserLogin();
-  console.log('event: the db is not yet ready\n-------------')
-  print_status()
-});
-
-db.on('ready', () => {
-  // login successful, show the main screen
-  //showMainScreen();
-  console.log('event: the db is ready!\n-------------')
- 
-});
-
-db.on('sync', () => {
-  console.log('the db received an update!\n-------------')
-  //show_items();
-});
 
 
 
@@ -96,8 +60,7 @@ const Login = ({navigation}) => {
 React.useEffect(()=>{
  
   db.on('ready', () => {
-    // login successful, show the main screen
-    //showMainScreen();
+    setDbIsReady(false)
     navigation.replace("MainScreen")
    
   });
@@ -116,16 +79,6 @@ React.useEffect(()=>{
     db.executeSql(sql, [], (results) => {
       console.log('log in command sent'+JSON.parse(results))
       // print_status()
-
-      db.on('ready', () => {
-        // login successful, show the main screen
-        //showMainScreen();
-        setDbIsReady(false)
-        navigation.replace("MainScreen")
-       
-      });
-
-
     }, (msg) => {
       setDbIsReady(false)
       console.log('could not log in the user:', msg)
@@ -139,15 +92,6 @@ React.useEffect(()=>{
     db.executeSql(sql, [], (results) => {
       console.log('log in command sent'+JSON.parse(results))
       // print_status()
-
-      db.on('ready', () => {
-        // login successful, show the main screen
-        //showMainScreen();
-        setDbIsReady(false)
-        navigation.replace("MainScreen")
-       
-      });
-
 
     }, (msg) => {
       setDbIsReady(false)
@@ -207,7 +151,7 @@ if(db_is_ready)
           }}
         >
           <View style={styles.searchSection}>
-            <Icon name="call-sharp" size={18} style={{marginHorizontal:5}} color="#cacaca" />
+            <Icon name="mail" size={18} style={{marginHorizontal:5}} color="#cacaca" />
             <TextInput
             ref={emailRef}
               style={styles.input}
