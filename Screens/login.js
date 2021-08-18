@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef} from "react";
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 // import { Input, Button } from "react-native-elements";
@@ -22,7 +23,7 @@ import { sha256 } from 'react-native-sha256';
 import db from '../DatabaseCOnnection/DB'
 
 
-var dbStatus;
+console.log(db)
 
 function print_status() {
   db.executeSql("pragma sync_status", [], (results) => {
@@ -109,6 +110,7 @@ React.useEffect(()=>{
   }
 
   const Login_Click_Handler= async() =>{
+    setDbIsReady(true)
     var info = await get_login_info();
     var sql = "pragma user_login='" + info + "'"
     db.executeSql(sql, [], (results) => {
@@ -118,17 +120,20 @@ React.useEffect(()=>{
       db.on('ready', () => {
         // login successful, show the main screen
         //showMainScreen();
+        setDbIsReady(false)
         navigation.replace("MainScreen")
        
       });
 
 
     }, (msg) => {
+      setDbIsReady(false)
       console.log('could not log in the user:', msg)
     });  
   }
 
   const Sign_Up_Click_Handler= async() =>{
+    setDbIsReady(true)
     var info = await get_login_info();
     var sql = "pragma user_signup='" + info + "'"
     db.executeSql(sql, [], (results) => {
@@ -138,16 +143,25 @@ React.useEffect(()=>{
       db.on('ready', () => {
         // login successful, show the main screen
         //showMainScreen();
+        setDbIsReady(false)
         navigation.replace("MainScreen")
        
       });
 
 
     }, (msg) => {
+      setDbIsReady(false)
       console.log('could not log in the user:', msg)
     });
   }
-
+if(db_is_ready)
+{
+  return(
+    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+      <ActivityIndicator color="blue" size="large" />
+    </View>
+  )
+}
   return (
     <View style={styles.container}>
       <View
